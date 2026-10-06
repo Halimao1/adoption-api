@@ -1,99 +1,54 @@
-# Dog Adoption Platform API
+# Dog Adoption API
 
-A REST API for registering dogs, managing adoption records, and controlling access with user authentication. Built as a school project during Springboard’s Software Engineering Career Track.
+A backend project I built during Springboard’s Software Engineering Career Track. Users can create an account, register dogs, and adopt dogs registered by other users.
 
 ## Features
 
-- User registration and login with bcrypt password hashing and JWT authentication.
-- Register dogs and view your own registered dogs.
-- Filter registered dogs by adoption status and paginate results.
-- Adopt another user’s dog with a thank-you message.
-- Prevent users from adopting their own dogs or adopting a dog twice.
-- Allow owners to remove their available dogs; prevent removal after adoption.
-- View your own adopted dogs with pagination.
-- JSON error responses and automated API tests.
+- Create an account and log in.
+- Register a dog with a name and description.
+- View your registered and adopted dogs.
+- Filter your registered dogs by adoption status.
+- Adopt another user’s dog and leave a thank-you message.
+- Remove dogs you registered, as long as they haven’t been adopted.
 
-## Technologies
+Users cannot adopt their own dogs or adopt a dog that has already been adopted.
 
-Node.js · Express · MongoDB · Mongoose · JSON Web Tokens · bcrypt · Mocha · Chai
+## Built with
 
-This is a backend API. It does not include a frontend or a public catalog of all available dogs.
+Node.js, Express, MongoDB, Mongoose, JWT, and bcrypt.
 
-## Setup
+Tests use Mocha and Chai.
 
-Use Node.js 22 or newer and a running MongoDB instance.
+## Run the project
+
+You’ll need Node.js 22 or newer and MongoDB.
+
+1. Download or clone the project.
+2. Install the packages:
 
 ```sh
 npm ci
-cp .env.example .env
 ```
 
-Set `MONGODB_URI` to your development database connection string and replace `JWT_SECRET` with a long random secret. Keep `.env` out of GitHub.
+3. Copy `.env.example` to a new file named `.env`. Add your MongoDB connection string as `MONGODB_URI` and choose a long random value for `JWT_SECRET`. Keep `.env` private.
+4. Start the server:
 
 ```sh
 npm start
 ```
 
-The API defaults to `http://localhost:3000`. Use `npm run dev` for automatic restarts during development.
+The API runs at `http://localhost:3000`. It returns data rather than displaying a website.
 
-## Endpoints
+## Run the tests
 
-| Method | Route | Purpose | Authentication |
-| --- | --- | --- | --- |
-| POST | `/api/auth/register` | Register a user | No |
-| POST | `/api/auth/login` | Log in and receive a token | No |
-| POST | `/api/dogs` | Register a dog | Bearer token |
-| GET | `/api/dogs/registered` | List your registered dogs | Bearer token |
-| GET | `/api/dogs/adopted` | List your adopted dogs | Bearer token |
-| PATCH | `/api/dogs/:dogId/adopt` | Adopt another user’s dog | Bearer token |
-| DELETE | `/api/dogs/:dogId` | Remove your available dog | Bearer token |
-
-## Example requests
-
-Register a user:
-
-```sh
-curl -X POST http://localhost:3000/api/auth/register \
-  -H 'Content-Type: application/json' \
-  -d '{"username":"owner","password":"example-password"}'
-```
-
-Log in:
-
-```sh
-curl -X POST http://localhost:3000/api/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"username":"owner","password":"example-password"}'
-```
-
-Copy the returned token into `YOUR_TOKEN` in subsequent requests:
-
-```sh
-curl -X POST http://localhost:3000/api/dogs \
-  -H 'Authorization: Bearer YOUR_TOKEN' \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Bella","description":"Friendly dog looking for a home"}'
-
-curl 'http://localhost:3000/api/dogs/registered?page=1&limit=10&status=available' \
-  -H 'Authorization: Bearer YOUR_TOKEN'
-```
-
-To adopt a dog, log in as a second user and send `PATCH /api/dogs/:dogId/adopt` with that user’s token and a JSON body such as `{"thankYouMessage":"Thank you for Bella!"}`.
-
-## Tests
-
-Set `MONGODB_TEST_URI` to a separate, disposable test database before running:
+Set `MONGODB_TEST_URI` in `.env` to a separate test database, then run:
 
 ```sh
 npm test
 ```
 
-The tests delete user and dog records in the test database. Do not point `MONGODB_TEST_URI` at a database containing data you want to keep.
+The tests delete records in that database, so use one that contains only test data.
 
-## What I practiced
+## What I learned
 
-REST API design, authentication, ownership-based authorization, MongoDB data modeling, pagination, business rules, and HTTP integration testing.
-
-## Hosting
-
-This application requires a Node.js server and MongoDB. GitHub Pages cannot run the API. A deployed API also needs `MONGODB_URI` and `JWT_SECRET` configured as environment variables on its host.
+I practiced building API routes, saving data in MongoDB, handling user login, checking who can adopt or remove a dog, and testing requests.
